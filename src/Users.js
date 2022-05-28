@@ -4,6 +4,8 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import ButtonGroup from '@mui/material/ButtonGroup';
+
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -30,21 +32,56 @@ export default function Users() {
 //    const [error,setError]=useState(null)
 
    useEffect(()=>{
-        fetch("https://www.mecallapi.com/api/users")
-        .then(res=> res.json())
-        .then(
-            (result)=>{
-                // setIsLoaded(true);
-                setItems(result);
-        
-            }
-            ,
-            // (error)=>{
-            //     setIsLoaded(true);
-            //     setError(error);
-            // }
-        )
+     UserGet()
+ 
    },[])
+
+
+   const UserGet= ()=>{
+    fetch("https://www.mecallapi.com/api/users")
+    .then(res=> res.json())
+    .then(
+        (result)=>{
+            // setIsLoaded(true);
+            setItems(result);
+    
+        }
+        ,
+        // (error)=>{
+        //     setIsLoaded(true);
+        //     setError(error);
+        // }
+    )
+   }
+
+
+   const UserDelete = id =>{
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      "id": id
+    });
+
+    var requestOptions = {
+      method: 'DELETE',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    fetch("https://www.mecallapi.com/api/users/delete", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        alert(result['message'])
+         if(result['status']==='ok'){
+           UserGet()
+         }
+      })
+      .catch(error => console.log('error', error));
+
+   }
 
   return (
     <React.Fragment>
@@ -58,9 +95,9 @@ export default function Users() {
               Users
             </Typography>
           </Box>
-          <Box>
+          <Box sx={{p:2}}>
             <Link href="create">
-                <Button variant="contained">Users</Button>
+                <Button variant="contained">Add user</Button>
             </Link>
           </Box>
         </Box>
@@ -90,7 +127,13 @@ export default function Users() {
                   <TableCell align="right">{row.fname}</TableCell>
                   <TableCell align="right">{row.lname}</TableCell>
                   <TableCell align="right">{row.username}</TableCell>
-                  {/* <TableCell align="right">{row}</TableCell> */}
+                  <TableCell align="right">
+                    <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                        <Button>Edit</Button>
+                        <Button onClick={()=>UserDelete(row.id)}>Del</Button>
+                    </ButtonGroup>
+                  </TableCell>
+
 
                 </TableRow>
               ))}
