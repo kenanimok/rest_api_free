@@ -83,6 +83,10 @@ export default function Users() {
 
    }
 
+   const UserUpdate = id =>{
+      window.location='/update/'+id
+   }
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -129,7 +133,8 @@ export default function Users() {
                   <TableCell align="right">{row.username}</TableCell>
                   <TableCell align="right">
                     <ButtonGroup variant="contained" aria-label="outlined primary button group">
-                        <Button>Edit</Button>
+                        <Button onClick={()=>UserUpdate(row.id)}>Edit</Button>
+
                         <Button onClick={()=>UserDelete(row.id)}>Del</Button>
                     </ButtonGroup>
                   </TableCell>
